@@ -340,16 +340,16 @@ def set_ansible_envar() -> None:
         logger.debug("ANSIBLE_CONFIG set to %s", ansible_config_path)
 
 
-def get_and_check_collection_doc_cache(args, collection_doc_cache_fname: str) -> Tuple[List, Dict]:
+def get_and_check_collection_doc_cache(cache_dir, share_dir, collection_doc_cache_fname: str) -> Tuple[List, Dict]:
     """ensure the collection doc cache
     has the current version of the application
     as a safeguard, always delete and rebuild if not
     """
     messages = []
-    os.makedirs(args.cache_dir, exist_ok=True)
-    collection_doc_cache_path = f"{args.cache_dir}/{collection_doc_cache_fname}"
+    os.makedirs(cache_dir, exist_ok=True)
+    collection_doc_cache_path = f"{cache_dir}/{collection_doc_cache_fname}"
     messages.append(f"Collection doc cache: 'path' is '{collection_doc_cache_path}'")
-    collection_cache = _get_kvs(args, collection_doc_cache_path)
+    collection_cache = _get_kvs(share_dir, collection_doc_cache_path)
     if "version" in collection_cache:
         cache_version = collection_cache["version"]
     else:
@@ -367,9 +367,9 @@ def get_and_check_collection_doc_cache(args, collection_doc_cache_fname: str) ->
     return messages, collection_cache
 
 
-def _get_kvs(args, collection_doc_cache_path):
+def _get_kvs(share_dir, collection_doc_cache_path):
     spec = importlib.util.spec_from_file_location(
-        "kvs", f"{args.share_dir}/utils/key_value_store.py"
+        "kvs", f"{share_dir}/utils/key_value_store.py"
     )
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)

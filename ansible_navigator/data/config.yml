@@ -6,8 +6,9 @@
 #  description: str/list[str] - the description to use for --help/docs
 #  default: any - optional - the default value
 #  choices: list - optional - valid choices for this option
-#  type: str - optional - The type to validate against (str, int, list, dict, bool)
+#  type: str - optional - The type to validate against (str, int, list, dict, bool, path)
 #  elements: str - optional - When type is list then this is what each element should be
+#  cli_opts: dict - optional - Extra argparse values to use when building the clioptions.
 #  deprecated: todo add deprecation setup to state why and when it will be removed
 #  version_added: todo add a field that states when it was added for docs
 #
@@ -36,6 +37,8 @@
 #  - name: --container-engine
 #    deprecated: see above
 #    version_added: see above
+#  cli_opts:
+#    nargs: '+'
 
 container-engine:
   description:
@@ -137,7 +140,7 @@ inventory:
   description:
   - The inventory/inventories to use
   type: list
-  elements: str
+  elements: path
   config:
   - section:
     - ansible-navigator
@@ -163,7 +166,7 @@ log-file:
   description:
   - The application log file location
   default: ./ansible-navigator.log
-  type: str
+  type: path
   config:
   - section:
     - ansible-navigator
@@ -238,7 +241,7 @@ playbook:
   description:
   - The name of the playbook(s) to run
   type: list
-  elements: str
+  elements: path
   config:
   - section:
     - ansible-navigator
@@ -271,3 +274,18 @@ set-environment-variable:
   cli:
   - name: --senv
   - name: --set-environment-variable
+
+share-dir:  # Set internally
+  description:
+  - The ansible-navigator share directory
+  type: path
+
+cache-dir:  # Set internally
+  description:
+  - The ansible-navigator cache directory
+  type: path
+
+collection-doc-cache:  # Set internally
+  description:
+  - The ansible-navigator collection documentation cache
+  type: path
